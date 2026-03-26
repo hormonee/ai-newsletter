@@ -1,0 +1,24 @@
+# src/my_crew/config/tasks.yaml
+
+ai_research_task:
+  description: >
+    **1순위**: `RSSNewsFetcher(category='AI', yesterday_date='{yesterday_date}')` 도구를 사용하여 신뢰할 수 있는 매체에서 전날({yesterday_date}) 발행된 뉴스를 가져오세요. 
+    **2순위**: 만약 RSS 결과가 없거나 부족한 경우, 즉시 `SearXNGSearch`를 사용하여 "{yesterday_date} AI news"와 같은 키워드로 검색하세요. 
+    **주의**: 검색 결과에 "{yesterday_date}" 문자열이 없더라도, 업로드 시간이 '24시간 전' 또는 '어제'로 표시된다면 전날 뉴스로 간주하고 수집하세요. 최종 10개를 반드시 확보해야 합니다.
+  expected_output: >
+    RSS와 검색을 통해 확보된, {yesterday_date}에 발행된 글로벌 AI 핵심 이슈 10개 리스트.
+  agent: news_researcher
+
+# korea_research_task: (사용자 요청에 의해 삭제됨)
+
+email_formatting_task:
+  description: >
+    오늘(**{today_date}**)의 AI 뉴스 리포트를 작성하세요. 현재 한국 시각은 **{current_time}** 입니다.
+    - **중요**: 당신에게 전달된 10개의 AI 소식은 이미 물리적 검증(RSS 및 시간 필터링)이 완료된 **100% 실제 사실**입니다. 
+    - 자신의 내부 지식이나 "미래 날짜"라는 이유로 데이터를 의심하거나 생략하지 마세요. 2026년은 현재 시점입니다.
+    - **포맷**: 마크다운 절대 금지, HTML 태그만 사용. 본문에 시각 숫자는 미노출.
+    - AI 섹션에 10개의 소식을 풍성하게 담아주세요.
+  expected_output: >
+    {today_date} 시점을 기준으로 작성된, 마크다운과 시간 숫자가 없는 전문적인 HTML 이메일 본문.
+  agent: summary_editor
+  context: [ai_research_task]
